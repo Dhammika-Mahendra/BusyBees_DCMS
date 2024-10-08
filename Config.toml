@@ -1,0 +1,5 @@
+USER="aadf73_bsybdb"
+PASSWORD="busybeedb123"
+HOST="mysql8002.site4now.net"
+PORT=3306
+DATABASE="db_aadf73_bsybdb"
