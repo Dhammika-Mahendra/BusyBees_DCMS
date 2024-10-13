@@ -1,5 +1,5 @@
 // Data type for `children` table
-public type Child record {
+public type Children record {
     int id;
     string address;
     string dob;          // Date is represented as a string in ISO 8601 format in Ballerina
