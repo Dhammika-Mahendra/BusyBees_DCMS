@@ -44,3 +44,31 @@ public function createClassRoom(http:Caller caller, http:Request req) returns er
         check caller->respond("Error occurred while inserting data into the database: " + e.message());
     }
 }
+public function updateClassRoom(http:Caller caller, http:Request req, int id) returns error? {
+    
+    json payload = check req.getJsonPayload();
+ 
+    types:Classroom updatedClassroom = check payload.cloneWithType(types:Classroom);
+
+    do {
+        
+        sql:ExecutionResult result = check dbClient3->execute(
+            `UPDATE classrooms SET age_group = ?, class_name = ?, last_Updated = ? WHERE id = ?`,
+            updatedClassroom.age_Group, updatedClassroom.class_Name, updatedClassroom.last_Updated, id
+        );
+
+       
+        if result.affectedRowCount == 0 {
+           
+            check caller->respond({ "message": "No classroom found with the provided id to update." });
+        } else {
+            
+            json response = { "message": "Classroom updated successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        
+        check caller->respond("Error occurred while updating the classroom: " + e.message());
+    }
+}
+

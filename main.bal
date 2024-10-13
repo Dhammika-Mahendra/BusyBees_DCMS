@@ -22,4 +22,7 @@ service / on new http:Listener(8080) {
         check controllers:createClassRoom(caller, req);
     }
 
+    resource function put classRoom(http:Caller caller, http:Request req) returns error? {
+        check controllers:createClassRoom(caller, req);
+    }
 }
