@@ -1,0 +1,29 @@
+import ballerina/http;
+import BusyBees_DCMS.types;
+import ballerinax/mysql;
+
+const USER="aadf73_bsybdb";
+const PASSWORD="busybeedb123";
+const HOST="mysql8002.site4now.net";
+const PORT=3306;
+const DATABASE="db_aadf73_bsybdb";
+
+final mysql:Client dbClient3 = check new(
+    host=HOST, user=USER, password=PASSWORD, port=PORT, database=DATABASE
+);
+
+public function getAllClassRoom(http:Caller caller, http:Request req) returns error? {
+        types:Classroom[] classRoomData=[];
+
+        do{
+            stream<types:Classroom,error?> resultStream = dbClient3->query(`SELECT * FROM classrooms`);
+            check from types:Classroom cr in resultStream
+                do {
+                    classRoomData.push(cr);
+                };
+            check resultStream.close();
+            check caller->respond(classRoomData);
+        } on fail var e {
+            check caller->respond("Error occurred while fetching data from the database: " + e.message());
+        }
+}
