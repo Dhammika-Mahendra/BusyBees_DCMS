@@ -31,5 +31,31 @@ public function getAllChidren(http:Caller caller, http:Request req) returns erro
         } on fail var e {
         	check caller->respond("Error occurred while fetching data from the database: " + e.message());
         }
+}
 
+public function getChildById(http:Caller caller, http:Request req) returns error? {
+    types:Children? child = ();
+    string? childId = req.getQueryParamValue("childId");
+
+    do {
+        stream<types:Children, error?> resultStream = dbClient->query(
+            `SELECT * FROM children WHERE id = ${childId}`
+        );
+        check from types:Children ch in resultStream
+            do {
+                child = ch;
+            };
+
+        check resultStream.close();
+
+        if child is () {
+            // No child found, respond with 404
+            check caller->respond("Child not found for the given ID: " + childId.toString());
+        } else {
+            // Child found, respond with data
+            check caller->respond(child);
+        }
+    } on fail var e {
+        check caller->respond("Error occurred while fetching data from the database: " + e.message());
+    }
 }

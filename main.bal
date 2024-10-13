@@ -12,6 +12,10 @@ service / on new http:Listener(8080) {
     resource function get child(http:Caller caller, http:Request req) returns error? {
         check controllers:getAllChidren(caller, req);
     }
+    
+    resource function get child(http:Caller caller, http:Request req) returns error? {
+        check controllers:getChildById(caller, req);
+    }
 
     // Get all staff function
     resource function get staff(http:Caller caller, http:Request req) returns error? {
@@ -21,5 +25,13 @@ service / on new http:Listener(8080) {
     // Update staff function - HTTP PUT
     resource function put staff/[string id](http:Caller caller, http:Request req) returns error? {
         check controllers:updateStaff(caller, req, id);
+    }
+
+    resource function get classRoom(http:Caller caller, http:Request req) returns error? {
+        check controllers:getAllClassRoom(caller, req);
+    }
+
+    resource function post classRoom(http:Caller caller, http:Request req) returns error? {
+        check controllers:createClassRoom(caller, req);
     }
 }
