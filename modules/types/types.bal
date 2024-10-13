@@ -21,9 +21,9 @@ public type Guardian record {
 // Data type for `classrooms` table
 public type Classroom record {
     int id;
-    string? ageGroup;     // Nullable field
-    string? className;    // Nullable field
-    string lastUpdated;   // DateTime is represented as a string in Ballerina
+    string? age_Group;     // Nullable field
+    string? class_Name;    // Nullable field
+    string last_Updated;   // DateTime is represented as a string in Ballerina
 };
 
 // Data type for `staffs` table
