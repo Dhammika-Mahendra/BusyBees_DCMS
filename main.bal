@@ -1,32 +1,12 @@
 import ballerina/http;
-import ballerinax/mysql;
+import BusyBees_DCMS.controllers;
 
-configurable string USER = ?;
-configurable string PASSWORD = ?;
-configurable string HOST = ?;
-configurable int PORT = ?;
-configurable string DATABASE = ?;
-
-final mysql:Client dbClient = check new(
-    host=HOST, user=USER, password=PASSWORD, port=PORT, database=DATABASE
-);
-
-service /crud on new http:Listener(8080) {
-
-    //getting the all employees
-	resource function get ch() returns Children[]|error {
-            Children[] childrenData=[];
-            do {
-	            stream<Children, error?> resultStream =dbClient->query(`SELECT * FROM children`);
-                check from Children ch in resultStream
-                    do {
-                        childrenData.push(ch);
-                    };
-                check resultStream.close();
-                return childrenData;
-            } on fail var e {
-            	return e;
-            }
+service / on new http:Listener(8080) {
+    resource function get hello(http:Caller caller, http:Request req) returns error? {
+        check caller->respond("Hello from main service!");
     }
 
+    resource function get child(http:Caller caller, http:Request req) returns error? {
+        check controllers:getAllChidren(caller, req);
+    }
 }
