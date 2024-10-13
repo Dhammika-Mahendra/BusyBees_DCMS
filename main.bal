@@ -13,7 +13,7 @@ service / on new http:Listener(8080) {
     //==================================================================================
 
     // Get all children function
-    resource function get childrenren(http:Caller caller, http:Request req) returns error? {
+    resource function get children(http:Caller caller, http:Request req) returns error? {
         check controllers:getAllChidren(caller, req);
     }
     
