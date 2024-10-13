@@ -1,6 +1,7 @@
 import ballerina/http;
 import BusyBees_DCMS.types;
 import ballerinax/mysql;
+import ballerina/sql;
 
 const USER="aadf73_bsybdb";
 const PASSWORD="busybeedb123";
@@ -26,4 +27,20 @@ public function getAllClassRoom(http:Caller caller, http:Request req) returns er
         } on fail var e {
             check caller->respond("Error occurred while fetching data from the database: " + e.message());
         }
+}
+
+public function createClassRoom(http:Caller caller, http:Request req) returns error? {
+    json payload=check req.getJsonPayload();
+    types:Classroom newClassroom=check payload.cloneWithType(types:Classroom);
+    do {
+        sql:ExecutionResult result = check dbClient3->execute(`INSERT INTO classrooms (age_group, class_name,last_Updated) VALUES (${newClassroom.age_Group}, ${newClassroom.class_Name}, ${newClassroom.last_Updated})`);
+        if(result.affectedRowCount==0){
+            check caller->respond("Error occurred while inserting data into the database: No rows affected");
+        }else{
+            json response = { "message": "Classroom created successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        check caller->respond("Error occurred while inserting data into the database: " + e.message());
+    }
 }
