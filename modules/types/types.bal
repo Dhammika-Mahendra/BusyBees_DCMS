@@ -3,9 +3,9 @@ public type Children record {
     int id;
     string address;
     string dob;          // Date is represented as a string in ISO 8601 format in Ballerina
-    string firstName;
-    string lastName;
-    int? guardianId;      // Nullable field
+    string first_Name;
+    string last_Name;
+    int? guardian_Id;      // Nullable field
 };
 
 // Data type for `guardians` table

@@ -6,7 +6,12 @@ service / on new http:Listener(8080) {
         check caller->respond("Hello from main service!");
     }
 
-    resource function get child(http:Caller caller, http:Request req) returns error? {
+    resource function get children(http:Caller caller, http:Request req) returns error? {
         check controllers:getAllChidren(caller, req);
     }
+
+    resource function get child(http:Caller caller, http:Request req) returns error? {
+        check controllers:getChildById(caller, req);
+    }
+
 }
