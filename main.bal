@@ -21,6 +21,18 @@ service / on new http:Listener(8080) {
         check controllers:getChildById(caller, req);
     }
 
+    resource function post child(http:Caller caller, http:Request req) returns error? {
+        check controllers:createChildren(caller, req);
+    }
+
+    resource function put child(http:Caller caller, http:Request req) returns error? {
+        check controllers:updateChildren(caller, req);
+    }
+
+    resource function delete child(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteChildren(caller, req);
+    }
+
 
     //==================================================================================
     //                  Staff

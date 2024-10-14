@@ -1,6 +1,7 @@
 import ballerina/http;
 import BusyBees_DCMS.types;
 import ballerinax/mysql;
+import ballerina/sql;
 
 const USER="aadf73_bsybdb";
 const PASSWORD="busybeedb123";
@@ -57,5 +58,62 @@ public function getChildById(http:Caller caller, http:Request req) returns error
         }
     } on fail var e {
         check caller->respond("Error occurred while fetching data from the database: " + e.message());
+    }
+}
+
+
+public function createChildren(http:Caller caller, http:Request req) returns error? {
+    json payload=check req.getJsonPayload();
+    types:Children newChildren=check payload.cloneWithType(types:Children);
+    do {
+        sql:ExecutionResult result = check dbClient->execute(`INSERT INTO children (address, dob , first_name , last_name ,guardian_id) VALUES (${newChildren.address}, ${newChildren.dob}, ${newChildren.first_name}, ${newChildren.last_name}, ${newChildren.guardian_id})`);
+        if(result.affectedRowCount==0){
+            check caller->respond("Error occurred while inserting data into the database: No rows affected");
+        }else{
+            json response = { "message": "Children created successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        check caller->respond("Error occurred while inserting data into the database: " + e.message());
+    }
+}
+
+
+public function updateChildren(http:Caller caller, http:Request req) returns error? {
+    string? id = req.getQueryParamValue("childId");
+    json payload = check req.getJsonPayload();
+    types:Children updatedChildren = check payload.cloneWithType(types:Children);
+    do {   
+        sql:ExecutionResult result = check dbClient->execute(`UPDATE children SET address = ${updatedChildren.address}, dob = ${updatedChildren.dob}, first_name = ${updatedChildren.first_name}, last_name = ${updatedChildren.last_name}, guardian_id = ${updatedChildren.guardian_id} WHERE id = ${id}`);     
+        if result.affectedRowCount == 0 {
+            check caller->respond({ "message": "No children found with the provided id to update." });
+        } else {
+            json response = { "message": "Children updated successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        
+        check caller->respond("Error occurred while updating the children: " + e.message());
+    }
+}
+
+public function deleteChildren(http:Caller caller, http:Request req) returns error? {
+    string? id = req.getQueryParamValue("childId");
+
+    if id is () {
+        check caller->respond("Error: Children id not provided.");
+        return;
+    }
+
+    do {
+        sql:ExecutionResult result = check dbClient->execute(`DELETE FROM children WHERE id = ${id}`);
+        if result.affectedRowCount == 0 {
+            check caller->respond({ "message": "No children found with the provided id to delete." });
+        } else {
+            json response = { "message": "Children deleted successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        check caller->respond("Error occurred while deleting the children: " + e.message());
     }
 }
