@@ -57,6 +57,10 @@ service / on new http:Listener(8080) {
         check controllers:getAllClassRoom(caller, req);
     }
 
+ resource function get ClassRoomById(http:Caller caller, http:Request req) returns error? {
+        check controllers:getClassRoomById(caller, req);
+    }
+
     resource function post classRoom(http:Caller caller, http:Request req) returns error? {
         check controllers:createClassRoom(caller, req);
     }
@@ -73,7 +77,25 @@ service / on new http:Listener(8080) {
     //                  Guardian
     //==================================================================================
 
-    
+        resource function get guardian(http:Caller caller, http:Request req) returns error? {
+        check controllers:getAllGuardian(caller, req);
+    }
+
+ resource function get GuardianById(http:Caller caller, http:Request req) returns error? {
+        check controllers:getGuardianById(caller, req);
+    }
+
+    resource function post guardian(http:Caller caller, http:Request req) returns error? {
+        check controllers:createGuardian(caller, req);
+    }
+
+    resource function put guardian(http:Caller caller, http:Request req) returns error? {
+        check controllers:updateGuardian(caller, req);
+    }
+
+    resource function delete Guardian(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteGuardian(caller, req);
+    }
     
     //==================================================================================
     //                  Schedule

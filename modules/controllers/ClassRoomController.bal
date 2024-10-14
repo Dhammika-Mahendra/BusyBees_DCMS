@@ -84,3 +84,32 @@ public function deleteClassRoom(http:Caller caller, http:Request req) returns er
     }
 }
 
+public function getClassRoomById(http:Caller caller, http:Request req) returns error? {
+    types:Classroom? classroom = ();
+    string? classId = req.getQueryParamValue("classId");
+
+    if classId is () {
+        check caller->respond("Classroom ID not provided.");
+        return;
+    }
+
+    do {
+        stream<types:Classroom, error?> resultStream = dbClient3->query(
+            `SELECT * FROM classrooms WHERE id = ${classId}`
+        );
+        check from types:Classroom cr in resultStream
+            do {
+                classroom = cr;
+            };
+
+        check resultStream.close();
+
+        if classroom is () {
+            check caller->respond("Classroom not found for the given ID: " + classId.toString());
+        } else {
+            check caller->respond(classroom);
+        }
+    } on fail var e {
+        check caller->respond("Error occurred while fetching data from the database: " + e.message());
+    }
+}
