@@ -38,17 +38,6 @@ service / on new http:Listener(8080) {
     //                  Staff
     //==================================================================================
 
-    // Get all staff function
-    resource function get staff(http:Caller caller, http:Request req) returns error? {
-        check controllers:getAllStaff(caller, req);
-    }
-
-    // Update staff function - HTTP PUT
-    resource function put staff/[string id](http:Caller caller, http:Request req) returns error? {
-        check controllers:updateStaff(caller, req, id);
-    }
-
-
     //==================================================================================
     //                  Classroom
     //==================================================================================
