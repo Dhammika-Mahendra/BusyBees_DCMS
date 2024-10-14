@@ -88,6 +88,7 @@ public function deleteSchedule(http:Caller caller, http:Request req) returns err
 }
 
 
+
 public function getScheduleById(http:Caller caller, http:Request req) returns error? {
     types:Schedule? schedule = ();
     string? scheduleId = req.getQueryParamValue("scheduleId");
