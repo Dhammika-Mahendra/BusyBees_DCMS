@@ -19,9 +19,9 @@ public function getAllStaff(http:Caller caller, http:Request req) returns error?
 
     do {
         stream<types:Staff, error?> resultStream = dbClient6->query(`SELECT * FROM staffs`);
-        check from types:Staff gr in resultStream
+        check from types:Staff sf in resultStream
             do {
-                staffsData.push(gr);
+                staffsData.push(sf);
             };
         check resultStream.close();
         check caller->respond(staffsData);
@@ -101,9 +101,9 @@ public function getStaffById(http:Caller caller, http:Request req) returns error
         stream<types:Staff, error?> resultStream = dbClient6->query(
             `SELECT * FROM staffs WHERE id = ${staffId}`
         );
-        check from types:Staff gr in resultStream
+        check from types:Staff sf in resultStream
             do {
-                staff = gr;
+                staff = sf;
             };
 
         check resultStream.close();
