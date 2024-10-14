@@ -44,3 +44,43 @@ public function createClassRoom(http:Caller caller, http:Request req) returns er
         check caller->respond("Error occurred while inserting data into the database: " + e.message());
     }
 }
+public function updateClassRoom(http:Caller caller, http:Request req) returns error? {
+    string? id = req.getQueryParamValue("id");
+    json payload = check req.getJsonPayload();
+    types:Classroom updatedClassroom = check payload.cloneWithType(types:Classroom);
+    do {   
+        sql:ExecutionResult result = check dbClient3->execute(`UPDATE classrooms SET age_group = ${updatedClassroom.age_Group}, class_name = ${updatedClassroom.class_Name}, last_Updated = ${updatedClassroom.last_Updated} WHERE id = ${id}`);     
+        if result.affectedRowCount == 0 {
+            check caller->respond({ "message": "No classroom found with the provided id to update." });
+        } else {
+            json response = { "message": "Classroom updated successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        
+        check caller->respond("Error occurred while updating the classroom: " + e.message());
+    }
+}
+
+public function deleteClassRoom(http:Caller caller, http:Request req) returns error? {
+    string? id = req.getQueryParamValue("id");
+
+    if id is () {
+        check caller->respond("Error: Classroom id not provided.");
+        return;
+    }
+
+    do {
+        sql:ExecutionResult result = check dbClient3->execute(`DELETE FROM classrooms WHERE id = ${id}`);
+        
+        if result.affectedRowCount == 0 {
+            check caller->respond({ "message": "No classroom found with the provided id to delete." });
+        } else {
+            json response = { "message": "Classroom deleted successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        check caller->respond("Error occurred while deleting the classroom: " + e.message());
+    }
+}
+
