@@ -53,6 +53,9 @@ service / on new http:Listener(8080) {
         check controllers:updateClassRoom(caller, req);
     }
 
+  resource function delete classRoom(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteClassRoom(caller, req);
+    }
 
     //==================================================================================
     //                  Guardian

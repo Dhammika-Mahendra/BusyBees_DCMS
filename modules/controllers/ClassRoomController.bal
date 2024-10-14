@@ -62,3 +62,25 @@ public function updateClassRoom(http:Caller caller, http:Request req) returns er
     }
 }
 
+public function deleteClassRoom(http:Caller caller, http:Request req) returns error? {
+    string? id = req.getQueryParamValue("id");
+
+    if id is () {
+        check caller->respond("Error: Classroom id not provided.");
+        return;
+    }
+
+    do {
+        sql:ExecutionResult result = check dbClient3->execute(`DELETE FROM classrooms WHERE id = ${id}`);
+        
+        if result.affectedRowCount == 0 {
+            check caller->respond({ "message": "No classroom found with the provided id to delete." });
+        } else {
+            json response = { "message": "Classroom deleted successfully!" };
+            check caller->respond(response);
+        }
+    } on fail var e {
+        check caller->respond("Error occurred while deleting the classroom: " + e.message());
+    }
+}
+
