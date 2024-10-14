@@ -37,18 +37,25 @@ service / on new http:Listener(8080) {
     //==================================================================================
     //                  Staff
     //==================================================================================
-
-    // Get all staff function
-    resource function get staff(http:Caller caller, http:Request req) returns error? {
+ resource function get staff(http:Caller caller, http:Request req) returns error? {
         check controllers:getAllStaff(caller, req);
     }
-
-    // Update staff function - HTTP PUT
-    resource function put staff/[string id](http:Caller caller, http:Request req) returns error? {
-        check controllers:updateStaff(caller, req, id);
+    
+    resource function get staffById(http:Caller caller, http:Request req) returns error? {
+        check controllers:getStaffById(caller, req);
     }
 
+    resource function post staff(http:Caller caller, http:Request req) returns error? {
+        check controllers:createStaff(caller, req);
+    }
 
+    resource function put staff(http:Caller caller, http:Request req) returns error? {
+        check controllers:updateStaff(caller, req);
+    }
+
+    resource function delete staff(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteStaff(caller, req);
+    }
     //==================================================================================
     //                  Classroom
     //==================================================================================
@@ -100,4 +107,25 @@ service / on new http:Listener(8080) {
     //==================================================================================
     //                  Schedule
     //==================================================================================
+    
+        resource function get schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:getAllSchedule(caller, req);
+    }
+
+ resource function get scheduleById(http:Caller caller, http:Request req) returns error? {
+        check controllers:getScheduleById(caller, req);
+    }
+
+    resource function post schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:createSchedule(caller, req);
+    }
+
+    resource function put schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:updateSchedule(caller, req);
+    }
+
+    resource function delete schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteSchedule(caller, req);
+    }
+    
 }
