@@ -107,4 +107,25 @@ service / on new http:Listener(8080) {
     //==================================================================================
     //                  Schedule
     //==================================================================================
+    
+        resource function get schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:getAllSchedule(caller, req);
+    }
+
+ resource function get scheduleById(http:Caller caller, http:Request req) returns error? {
+        check controllers:getScheduleById(caller, req);
+    }
+
+    resource function post schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:createSchedule(caller, req);
+    }
+
+    resource function put schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:updateSchedule(caller, req);
+    }
+
+    resource function delete schedule(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteSchedule(caller, req);
+    }
+    
 }
