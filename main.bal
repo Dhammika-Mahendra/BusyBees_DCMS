@@ -45,6 +45,10 @@ service / on new http:Listener(8080) {
         check controllers:getAllClassRoom(caller, req);
     }
 
+ resource function get ClassRoomById(http:Caller caller, http:Request req) returns error? {
+        check controllers:getClassRoomById(caller, req);
+    }
+
     resource function post classRoom(http:Caller caller, http:Request req) returns error? {
         check controllers:createClassRoom(caller, req);
     }
