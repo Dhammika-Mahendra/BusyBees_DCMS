@@ -45,9 +45,9 @@ public function updateStaff(http:Caller caller, http:Request req, string id) ret
 
     // Correct SQL query and parameterized query usage
     string query = "UPDATE Staff SET first_name = ?, last_name = ?, phone_number = ?, role = ? WHERE id = ?";
-    sql:ParameterizedQuery paramQuery = `UPDATE Staff SET first_name = ${updatedStaff.firstName}, 
-                                          last_name = ${updatedStaff.lastName}, 
-                                          phone_number = ${updatedStaff.phoneNumber}, 
+    sql:ParameterizedQuery paramQuery = `UPDATE Staff SET first_name = ${updatedStaff.first_name}, 
+                                          last_name = ${updatedStaff.last_name}, 
+                                          phone_number = ${updatedStaff.phone_number}, 
                                           role = ${updatedStaff.role} WHERE id = ${id}`;
     var result = dbClient2->execute(paramQuery);
 
