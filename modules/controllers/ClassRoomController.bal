@@ -33,7 +33,7 @@ public function createClassRoom(http:Caller caller, http:Request req) returns er
     json payload=check req.getJsonPayload();
     types:Classroom newClassroom=check payload.cloneWithType(types:Classroom);
     do {
-        sql:ExecutionResult result = check dbClient3->execute(`INSERT INTO classrooms (age_group, class_name,last_Updated) VALUES (${newClassroom.age_Group}, ${newClassroom.class_Name}, ${newClassroom.last_Updated})`);
+        sql:ExecutionResult result = check dbClient3->execute(`INSERT INTO classrooms (age_group, class_name,last_Updated) VALUES (${newClassroom.age_group}, ${newClassroom.class_name}, ${newClassroom.last_updated})`);
         if(result.affectedRowCount==0){
             check caller->respond("Error occurred while inserting data into the database: No rows affected");
         }else{
@@ -49,7 +49,7 @@ public function updateClassRoom(http:Caller caller, http:Request req) returns er
     json payload = check req.getJsonPayload();
     types:Classroom updatedClassroom = check payload.cloneWithType(types:Classroom);
     do {   
-        sql:ExecutionResult result = check dbClient3->execute(`UPDATE classrooms SET age_group = ${updatedClassroom.age_Group}, class_name = ${updatedClassroom.class_Name}, last_Updated = ${updatedClassroom.last_Updated} WHERE id = ${id}`);     
+        sql:ExecutionResult result = check dbClient3->execute(`UPDATE classrooms SET age_group = ${updatedClassroom.age_group}, class_name = ${updatedClassroom.class_name}, last_Updated = ${updatedClassroom.last_updated} WHERE id = ${id}`);     
         if result.affectedRowCount == 0 {
             check caller->respond({ "message": "No classroom found with the provided id to update." });
         } else {
