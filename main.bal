@@ -37,7 +37,25 @@ service / on new http:Listener(8080) {
     //==================================================================================
     //                  Staff
     //==================================================================================
+ resource function get staff(http:Caller caller, http:Request req) returns error? {
+        check controllers:getAllStaff(caller, req);
+    }
+    
+    resource function get staffById(http:Caller caller, http:Request req) returns error? {
+        check controllers:getStaffById(caller, req);
+    }
 
+    resource function post staff(http:Caller caller, http:Request req) returns error? {
+        check controllers:createStaff(caller, req);
+    }
+
+    resource function put staff(http:Caller caller, http:Request req) returns error? {
+        check controllers:updateStaff(caller, req);
+    }
+
+    resource function delete staff(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteStaff(caller, req);
+    }
     //==================================================================================
     //                  Classroom
     //==================================================================================
