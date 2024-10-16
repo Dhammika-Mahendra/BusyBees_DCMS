@@ -18,20 +18,27 @@ public function handleGreet(http:Caller caller, http:Request req) returns error?
     check caller->respond("Hello from greet controller!");
 }
 
-public function getAllChidren(http:Caller caller, http:Request req) returns error? {
-        types:Children[] childrenData=[];
+public function getAllChildren(http:Caller caller, http:Request req) returns error? {
+    types:Children[] childrenData = [];
 
-        do {
-	        stream<types:Children, error?> resultStream =dbClient->query(`SELECT * FROM children`);
-            check from types:Children ch in resultStream
-                do {
-                    childrenData.push(ch);
-                };
-            check resultStream.close();
-            check caller->respond(childrenData);
-        } on fail var e {
-        	check caller->respond("Error occurred while fetching data from the database: " + e.message());
-        }
+    do {
+        stream<types:Children, error?> resultStream = dbClient->query(`SELECT * FROM children`);
+        check from types:Children ch in resultStream
+            do {
+                childrenData.push(ch);
+            };
+        check resultStream.close();
+
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload(childrenData.toJson()); // Convert to JSON
+        check caller->respond(res);
+    } on fail var e {
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while fetching data from the database: " + e.message());
+        check caller->respond(res);
+    }
 }
 
 public function getChildById(http:Caller caller, http:Request req) returns error? {

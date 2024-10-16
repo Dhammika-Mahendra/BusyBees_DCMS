@@ -3,8 +3,19 @@ import BusyBees_DCMS.controllers;
 
 service / on new http:Listener(8080) {
 
+    // Middleware to add CORS headers
+    resource function options .(http:Caller caller, http:Request req) returns error? {
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        check caller->respond(res);
+    }
+
     // Hello function
     resource function get hello(http:Caller caller, http:Request req) returns error? {
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
         check caller->respond("Hello from main service!");
     }
 
@@ -14,8 +25,8 @@ service / on new http:Listener(8080) {
 
     // Get all children function
     resource function get children(http:Caller caller, http:Request req) returns error? {
-        check controllers:getAllChidren(caller, req);
-    }
+    check controllers:getAllChildren(caller, req); // Corrected function name
+}
     
     resource function get child(http:Caller caller, http:Request req) returns error? {
         check controllers:getChildById(caller, req);
