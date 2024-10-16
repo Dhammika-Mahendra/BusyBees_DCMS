@@ -46,3 +46,8 @@ public type Schedule record {
     int? child_id;         // Nullable field
     int? classroom_id;     // Nullable field
 };
+
+public type Auth record {
+    string email;
+    string password;
+};
