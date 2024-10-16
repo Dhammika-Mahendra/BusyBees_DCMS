@@ -116,23 +116,33 @@ public function updateChildren(http:Caller caller, http:Request req) returns err
     }
 }
 
-public function deleteChildren(http:Caller caller, http:Request req) returns error? {
-    string? id = req.getQueryParamValue("childId");
+    public function deleteChildren(http:Caller caller, http:Request req) returns error? {
+        string? id = req.getQueryParamValue("childId");
 
-    if id is () {
-        check caller->respond("Error: Children id not provided.");
-        return;
-    }
-
-    do {
-        sql:ExecutionResult result = check dbClient->execute(`DELETE FROM children WHERE id = ${id}`);
-        if result.affectedRowCount == 0 {
-            check caller->respond({ "message": "No children found with the provided id to delete." });
-        } else {
-            json response = { "message": "Children deleted successfully!" };
-            check caller->respond(response);
+        if id is () {
+            http:Response res = new;
+            res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+            res.setPayload("Error: Children id not provided.");
+            check caller->respond(res);
+            return;
         }
-    } on fail var e {
-        check caller->respond("Error occurred while deleting the children: " + e.message());
+
+        do {
+            sql:ExecutionResult result = check dbClient->execute(`DELETE FROM children WHERE id = ${id}`);
+            http:Response res = new;
+            res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+            if (result.affectedRowCount == 0) {
+                res.setPayload({ "message": "No children found with the provided id to delete." });
+                check caller->respond(res);
+            } else {
+                json response = { "message": "Children deleted successfully!" };
+                res.setPayload(response);
+                check caller->respond(res);
+            }
+        } on fail var e {
+            http:Response res = new;
+            res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+            res.setPayload("Error occurred while deleting the children: " + e.message());
+            check caller->respond(res);
+        }
     }
-}

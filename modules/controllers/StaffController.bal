@@ -39,18 +39,25 @@ public function getAllStaff(http:Caller caller, http:Request req) returns error?
 
 
 public function createStaff(http:Caller caller, http:Request req) returns error? {
-    json payload=check req.getJsonPayload();
-    types:Staff newStaff=check payload.cloneWithType(types:Staff);
+    json payload = check req.getJsonPayload();
+    types:Staff newStaff = check payload.cloneWithType(types:Staff);
     do {
-        sql:ExecutionResult result = check dbClient6->execute(`INSERT INTO staffs (email, first_name,last_name, phone_number, role) VALUES (${newStaff.email}, ${newStaff.first_name}, ${newStaff.last_name}, ${newStaff.phone_number}, ${newStaff.role})`);
-        if(result.affectedRowCount==0){
-            check caller->respond("Error occurred while inserting data into the database: No rows affected");
-        }else{
+        sql:ExecutionResult result = check dbClient6->execute(`INSERT INTO staffs (email, first_name, last_name, phone_number, role) VALUES (${newStaff.email}, ${newStaff.first_name}, ${newStaff.last_name}, ${newStaff.phone_number}, ${newStaff.role})`);
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        if (result.affectedRowCount == 0) {
+            res.setPayload("Error occurred while inserting data into the database: No rows affected");
+            check caller->respond(res);
+        } else {
             json response = { "message": "Staff created successfully!" };
-            check caller->respond(response);
+            res.setPayload(response);
+            check caller->respond(res);
         }
     } on fail var e {
-        check caller->respond("Error occurred while inserting data into the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while inserting data into the database: " + e.message());
+        check caller->respond(res);
     }
 }
 

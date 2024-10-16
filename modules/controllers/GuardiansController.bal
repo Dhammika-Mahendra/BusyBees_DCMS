@@ -24,9 +24,16 @@ public function getAllGuardian(http:Caller caller, http:Request req) returns err
                 guardiansData.push(gr);
             };
         check resultStream.close();
-        check caller->respond(guardiansData);
+
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload(guardiansData.toJson()); // Convert to JSON
+        check caller->respond(res);
     } on fail var e {
-        check caller->respond("Error occurred while fetching data from the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while fetching data from the database: " + e.message());
+        check caller->respond(res);
     }
 }
 

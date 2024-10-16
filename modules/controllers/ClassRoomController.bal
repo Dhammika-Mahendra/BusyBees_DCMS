@@ -14,19 +14,26 @@ final mysql:Client dbClient3 = check new(
 );
 
 public function getAllClassRoom(http:Caller caller, http:Request req) returns error? {
-        types:Classroom[] classRoomData=[];
+    types:Classroom[] classRoomData = [];
 
-        do{
-            stream<types:Classroom,error?> resultStream = dbClient3->query(`SELECT * FROM classrooms`);
-            check from types:Classroom cr in resultStream
-                do {
-                    classRoomData.push(cr);
-                };
-            check resultStream.close();
-            check caller->respond(classRoomData);
-        } on fail var e {
-            check caller->respond("Error occurred while fetching data from the database: " + e.message());
-        }
+    do {
+        stream<types:Classroom, error?> resultStream = dbClient3->query(`SELECT * FROM classrooms`);
+        check from types:Classroom cr in resultStream
+            do {
+                classRoomData.push(cr);
+            };
+        check resultStream.close();
+
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload(classRoomData.toJson()); // Convert to JSON
+        check caller->respond(res);
+    } on fail var e {
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while fetching data from the database: " + e.message());
+        check caller->respond(res);
+    }
 }
 
 public function createClassRoom(http:Caller caller, http:Request req) returns error? {
