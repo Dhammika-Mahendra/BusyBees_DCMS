@@ -69,21 +69,33 @@ public function getChildById(http:Caller caller, http:Request req) returns error
 }
 
 
+//Dilum addded cors
 public function createChildren(http:Caller caller, http:Request req) returns error? {
-    json payload=check req.getJsonPayload();
-    types:Children newChildren=check payload.cloneWithType(types:Children);
+    json payload = check req.getJsonPayload();
+    types:Children newChildren = check payload.cloneWithType(types:Children);
     do {
-        sql:ExecutionResult result = check dbClient->execute(`INSERT INTO children (address, dob , first_name , last_name ,guardian_id) VALUES (${newChildren.address}, ${newChildren.dob}, ${newChildren.first_name}, ${newChildren.last_name}, ${newChildren.guardian_id})`);
-        if(result.affectedRowCount==0){
-            check caller->respond("Error occurred while inserting data into the database: No rows affected");
-        }else{
-            json response = { "message": "Children created successfully!" };
-            check caller->respond(response);
-        }
+        sql:ExecutionResult result = check dbClient->execute(`INSERT INTO children (address, dob, first_name, last_name, guardian_id) VALUES (${newChildren.address}, ${newChildren.dob}, ${newChildren.first_name}, ${newChildren.last_name}, ${newChildren.guardian_id})`);
+        
+        // Prepare the response with CORS headers
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+        res.setPayload({ "status": "success", "message": "Child created successfully" });
+        check caller->respond(res);
     } on fail var e {
-        check caller->respond("Error occurred while inserting data into the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+        res.setPayload({ "status": "error", "message": "Error creating child: " + e.message() });
+        check caller->respond(res);
     }
 }
+
+
 
 
 public function updateChildren(http:Caller caller, http:Request req) returns error? {

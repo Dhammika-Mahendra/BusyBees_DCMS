@@ -24,9 +24,16 @@ public function getAllStaff(http:Caller caller, http:Request req) returns error?
                 staffsData.push(sf);
             };
         check resultStream.close();
-        check caller->respond(staffsData);
+
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload(staffsData.toJson()); // Convert to JSON
+        check caller->respond(res);
     } on fail var e {
-        check caller->respond("Error occurred while fetching data from the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while fetching data from the database: " + e.message());
+        check caller->respond(res);
     }
 }
 
