@@ -128,4 +128,15 @@ service / on new http:Listener(8080) {
         check controllers:deleteSchedule(caller, req);
     }
     
+    //==================================================================================
+    //                  Auth
+    //==================================================================================
+
+    resource function post reg(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteSchedule(caller, req);
+    }
+
+    resource function post log(http:Caller caller, http:Request req) returns error? {
+        check controllers:deleteSchedule(caller, req);
+    }
 }
