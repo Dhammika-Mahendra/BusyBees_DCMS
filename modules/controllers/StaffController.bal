@@ -35,7 +35,7 @@ public function createStaff(http:Caller caller, http:Request req) returns error?
     json payload=check req.getJsonPayload();
     types:Staff newStaff=check payload.cloneWithType(types:Staff);
     do {
-        sql:ExecutionResult result = check dbClient6->execute(`INSERT INTO staffs (email, first_name,last_name, phone_number, role) VALUES (${newStaff.email}, ${newStaff.first_name}, ${newStaff.last_name}, ${newStaff.phone_number}, ${newStaff.role})`);
+        sql:ExecutionResult result = check dbClient6->execute(`INSERT INTO staffs (email, first_name,last_name, phone_number, role ,password) VALUES (${newStaff.email}, ${newStaff.first_name}, ${newStaff.last_name}, ${newStaff.phone_number}, ${newStaff.role}, ${newStaff.password}))`);
         if(result.affectedRowCount==0){
             check caller->respond("Error occurred while inserting data into the database: No rows affected");
         }else{
