@@ -20,7 +20,7 @@ public function register(types:Auth authdata) returns string?{
 
     types:Auth? ath;
     do {
-        stream<types:Auth, error?> resultStream = dbClient6->query(
+        stream<types:Auth, error?> resultStream = dbClient0->query(
             `SELECT * FROM auth WHERE email = ${newAuth.email}`
         );
         check from types:Auth a in resultStream
@@ -35,7 +35,7 @@ public function register(types:Auth authdata) returns string?{
 
             //Insert the new user & password.........................................
             do {
-                sql:ExecutionResult result = check dbClient6->execute(`INSERT INTO auth (email,password) VALUES ($      {newAuth.email}, ${newAuth.password})`);
+                sql:ExecutionResult result = check dbClient0->execute(`INSERT INTO auth (email,password) VALUES ($      {newAuth.email}, ${newAuth.password})`);
                 if(result.affectedRowCount==0){
                     return "Error";
                 }else{
@@ -58,20 +58,20 @@ public function login(types:Auth authdata) returns string?{
 
     //Check if the email already exists......................................
 
-    types:Auth? ath;
+    types:Staff? stf;
     do {
-        stream<types:Auth, error?> resultStream = dbClient6->query(
-            `SELECT * FROM auth WHERE email = ${newAuth.email}`
+        stream<types:Staff, error?> resultStream = dbClient0->query(
+            `SELECT * FROM staffs WHERE email = ${newAuth.email}`
         );
-        check from types:Auth a in resultStream
+        check from types:Staff st in resultStream
             do {
-                ath=a;
+                stf=st;
             };
         check resultStream.close();
-        if ath is () {
+        if stf is () {
             return "Not Exist";
         } else {
-            if(ath.password==newAuth.password){
+            if(stf.password==newAuth.password){
                 return "OK";
             }else{
                 return "Incorrect";

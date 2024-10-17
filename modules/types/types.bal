@@ -34,6 +34,7 @@ public type Staff record {
     string? last_name;     // Nullable field
     string? phone_number;  // Nullable field
     string? role;         // Nullable field
+    string? password;     // Nullable field
 };
 
 // Data type for `schedules` table
