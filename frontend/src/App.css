@@ -1,0 +1,77 @@
+/* src/App.css */
+.app {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Login form */
+.login-form {
+  max-width: 400px;
+  margin-top: 180px;
+  margin-left: 940px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.login-form h2 {
+  text-align: center;
+}
+
+.login-form div {
+  margin-bottom: 15px;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 10px;
+  background-color:#4A90E2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #13539b;
+}
+
+.login-form span {
+  color: red;
+  font-size: 12px;
+}
+
+
+/* src/Sidebar.css */
+
+.sidebar {
+  width: 50%;
+  height: 100vh;
+  background-color: #4A90E2;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+
+
+
+
