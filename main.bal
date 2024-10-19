@@ -1,6 +1,15 @@
 import ballerina/http;
 import BusyBees_DCMS.controllers;
 import BusyBees_DCMS.types;
+    @http:ServiceConfig {
+    cors: {
+        allowOrigins: ["http://localhost:5173"],
+        allowHeaders: ["Content-Type"],
+        allowMethods: ["POST", "GET", "PUT", "DELETE"],
+        exposeHeaders: ["Access-Control-Allow-Origin"],
+        allowCredentials: true
+    }
+}
 
 service / on new http:Listener(8080) {
 
