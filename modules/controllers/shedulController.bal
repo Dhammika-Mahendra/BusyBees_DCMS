@@ -24,29 +24,42 @@ public function getAllSchedule(http:Caller caller, http:Request req) returns err
                 schedulesData.push(sd);
             };
         check resultStream.close();
-        check caller->respond(schedulesData);
+
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload(schedulesData.toJson()); // Convert to JSON
+        check caller->respond(res);
     } on fail var e {
-        check caller->respond("Error occurred while fetching data from the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while fetching data from the database: " + e.message());
+        check caller->respond(res);
     }
 }
 
 
 public function createSchedule(http:Caller caller, http:Request req) returns error? {
-    json payload=check req.getJsonPayload();
-    types:Schedule newSchedule=check payload.cloneWithType(types:Schedule);
+    json payload = check req.getJsonPayload();
+    types:Schedule newSchedule = check payload.cloneWithType(types:Schedule);
     do {
-        sql:ExecutionResult result = check dbClient7->execute(`INSERT INTO schedules (date, end_time,start_time, staff_id, child_id, classroom_id) VALUES (${newSchedule.date}, ${newSchedule.end_time}, ${newSchedule.start_time}, ${newSchedule.staff_id}, ${newSchedule.child_id}, ${newSchedule.classroom_id})`);
-        if(result.affectedRowCount==0){
-            check caller->respond("Error occurred while inserting data into the database: No rows affected");
-        }else{
-            json response = { "message": "Schedule created successdully!" };
-            check caller->respond(response);
+        sql:ExecutionResult result = check dbClient7->execute(`INSERT INTO schedules (date, end_time, start_time, staff_id, child_id, classroom_id) VALUES (${newSchedule.date}, ${newSchedule.end_time}, ${newSchedule.start_time}, ${newSchedule.staff_id}, ${newSchedule.child_id}, ${newSchedule.classroom_id})`);
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        if (result.affectedRowCount == 0) {
+            res.setPayload("Error occurred while inserting data into the database: No rows affected");
+            check caller->respond(res);
+        } else {
+            json response = { "message": "Schedule created successfully!" };
+            res.setPayload(response);
+            check caller->respond(res);
         }
     } on fail var e {
-        check caller->respond("Error occurred while inserting data into the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while inserting data into the database: " + e.message());
+        check caller->respond(res);
     }
 }
-
 public function updateSchedule(http:Caller caller, http:Request req) returns error? {
     string? id = req.getQueryParamValue("id");
     json payload = check req.getJsonPayload();

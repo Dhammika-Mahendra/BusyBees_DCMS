@@ -27,9 +27,16 @@ public function getAllStaff(http:Caller caller, http:Request req) returns error?
                 staffsData.push(sf);
             };
         check resultStream.close();
-        check caller->respond(staffsData);
+
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload(staffsData.toJson()); // Convert to JSON
+        check caller->respond(res);
     } on fail var e {
-        check caller->respond("Error occurred while fetching data from the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while fetching data from the database: " + e.message());
+        check caller->respond(res);
     }
 }
 
@@ -40,6 +47,7 @@ public function getAllStaff(http:Caller caller, http:Request req) returns error?
 public function createStaff(http:Caller caller, http:Request req) returns error? {
     json payload = check req.getJsonPayload();
     types:Staff newStaff = check payload.cloneWithType(types:Staff);
+
     
     do {
         sql:ExecutionResult result = check dbClient6->execute(
@@ -49,12 +57,17 @@ public function createStaff(http:Caller caller, http:Request req) returns error?
 
         if (result.affectedRowCount == 0) {
             check caller->respond("Error occurred while inserting data into the database: No rows affected");
+
         } else {
             json response = { "message": "Staff created successfully!" };
-            check caller->respond(response);
+            res.setPayload(response);
+            check caller->respond(res);
         }
     } on fail var e {
-        check caller->respond("Error occurred while inserting data into the database: " + e.message());
+        http:Response res = new;
+        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        res.setPayload("Error occurred while inserting data into the database: " + e.message());
+        check caller->respond(res);
     }
 }
 

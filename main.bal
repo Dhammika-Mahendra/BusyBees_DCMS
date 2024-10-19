@@ -1,5 +1,6 @@
 import ballerina/http;
 import BusyBees_DCMS.controllers;
+
 import BusyBees_DCMS.types;
     @http:ServiceConfig {
     cors: {
@@ -11,7 +12,9 @@ import BusyBees_DCMS.types;
     }
 }
 
+
 service / on new http:Listener(8080) {
+    
 
     // Hello function
     resource function get hello(http:Caller caller, http:Request req) returns error? {
@@ -24,7 +27,7 @@ service / on new http:Listener(8080) {
 
     // Get all children function
     resource function get children(http:Caller caller, http:Request req) returns error? {
-        check controllers:getAllChidren(caller, req);
+        check controllers:getAllChildren(caller, req);
     }
     
     resource function get child(http:Caller caller, http:Request req) returns error? {
@@ -142,6 +145,7 @@ service / on new http:Listener(8080) {
     //                  Auth
     //==================================================================================
 
+
     resource function post log(http:Caller caller, http:Request req) returns error? {
         json payload=check req.getJsonPayload();
         types:Auth newAuth=check payload.cloneWithType(types:Auth);
@@ -155,3 +159,4 @@ service / on new http:Listener(8080) {
         }
     }
 }
+
