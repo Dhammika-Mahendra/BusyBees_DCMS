@@ -13,6 +13,9 @@ final mysql:Client dbClient6 = check new(
     host = HOST, user = USER, password = PASSWORD, port = PORT, database = DATABASE
 );
 
+//==================================================================================
+//                  Get All Staff
+//==================================================================================
 
 public function getAllStaff(http:Caller caller, http:Request req) returns error? {
     types:Staff[] staffsData = [];
@@ -37,17 +40,24 @@ public function getAllStaff(http:Caller caller, http:Request req) returns error?
     }
 }
 
+//==================================================================================
+//                  Create Staff
+//==================================================================================
 
 public function createStaff(http:Caller caller, http:Request req) returns error? {
     json payload = check req.getJsonPayload();
     types:Staff newStaff = check payload.cloneWithType(types:Staff);
+
+    
     do {
-        sql:ExecutionResult result = check dbClient6->execute(`INSERT INTO staffs (email, first_name, last_name, phone_number, role) VALUES (${newStaff.email}, ${newStaff.first_name}, ${newStaff.last_name}, ${newStaff.phone_number}, ${newStaff.role})`);
-        http:Response res = new;
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        sql:ExecutionResult result = check dbClient6->execute(
+            `INSERT INTO staffs (email, first_name, last_name, phone_number, role, password) 
+             VALUES (${newStaff.email}, ${newStaff.first_name}, ${newStaff.last_name}, ${newStaff.phone_number}, ${newStaff.role}, ${newStaff.password})`
+        );
+
         if (result.affectedRowCount == 0) {
-            res.setPayload("Error occurred while inserting data into the database: No rows affected");
-            check caller->respond(res);
+            check caller->respond("Error occurred while inserting data into the database: No rows affected");
+
         } else {
             json response = { "message": "Staff created successfully!" };
             res.setPayload(response);
@@ -61,24 +71,41 @@ public function createStaff(http:Caller caller, http:Request req) returns error?
     }
 }
 
+//==================================================================================
+//                  Update Staff
+//==================================================================================
 public function updateStaff(http:Caller caller, http:Request req) returns error? {
     string? id = req.getQueryParamValue("id");
     json payload = check req.getJsonPayload();
     types:Staff updatedStaff = check payload.cloneWithType(types:Staff);
+    
     do {   
-        sql:ExecutionResult result = check dbClient6->execute(`UPDATE staffs SET email = ${updatedStaff.email}, first_name = ${updatedStaff.first_name}, last_name = ${updatedStaff.last_name} , phone_number = ${updatedStaff.phone_number}, role = ${updatedStaff.role}WHERE id = ${id}`);     
-        if result.affectedRowCount == 0 {
+        sql:ExecutionResult result = check dbClient6->execute(
+            `UPDATE staffs 
+             SET email = ${updatedStaff.email}, 
+                 first_name = ${updatedStaff.first_name}, 
+                 last_name = ${updatedStaff.last_name}, 
+                 phone_number = ${updatedStaff.phone_number}, 
+                 role = ${updatedStaff.role}, 
+                 password = ${updatedStaff.password} -- Update password if provided
+             WHERE id = ${id}`
+        );
+
+        if (result.affectedRowCount == 0) {
             check caller->respond({ "message": "No staff found with the provided id to update." });
         } else {
-            json response = { "message": "Staffs updated successfully!" };
+            json response = { "message": "Staff updated successfully!" };
             check caller->respond(response);
         }
     } on fail var e {
-        
-        check caller->respond("Error occurred while updating the staffs: " + e.message());
+        check caller->respond("Error occurred while updating the staff: " + e.message());
     }
 }
 
+
+//==================================================================================
+//                  Delete Staff
+//==================================================================================
 
 public function deleteStaff(http:Caller caller, http:Request req) returns error? {
     string? id = req.getQueryParamValue("id");
@@ -101,6 +128,9 @@ public function deleteStaff(http:Caller caller, http:Request req) returns error?
     }
 }
 
+//==================================================================================
+//                  Get Staff By ID
+//==================================================================================
 
 public function getStaffById(http:Caller caller, http:Request req) returns error? {
     types:Staff? staff = ();
@@ -131,3 +161,13 @@ public function getStaffById(http:Caller caller, http:Request req) returns error
         check caller->respond("Error occurred while fetching data from the database: " + e.message());
     }
 }
+
+//==================================================================================
+//                  Staff Resource
+//==================================================================================
+
+// service /staff on new http:Listener(8080) {
+//     resource function post staff(http:Caller caller, http:Request req) returns error? {
+//         check createStaff(caller, req);
+//     }
+// }

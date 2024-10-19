@@ -1,10 +1,18 @@
 import ballerina/http;
 import BusyBees_DCMS.controllers;
+
+import BusyBees_DCMS.types;
     @http:ServiceConfig {
-        cors: {
-            allowOrigins: ["http://localhost:5173"]
-        }
+    cors: {
+        allowOrigins: ["http://localhost:5173"],
+        allowHeaders: ["Content-Type"],
+        allowMethods: ["POST", "GET", "PUT", "DELETE"],
+        exposeHeaders: ["Access-Control-Allow-Origin"],
+        allowCredentials: true
     }
+}
+
+
 service / on new http:Listener(8080) {
     
 
@@ -137,11 +145,18 @@ service / on new http:Listener(8080) {
     //                  Auth
     //==================================================================================
 
-    resource function post reg(http:Caller caller, http:Request req) returns error? {
-        check controllers:deleteSchedule(caller, req);
-    }
 
     resource function post log(http:Caller caller, http:Request req) returns error? {
-        check controllers:deleteSchedule(caller, req);
+        json payload=check req.getJsonPayload();
+        types:Auth newAuth=check payload.cloneWithType(types:Auth);
+        string? result = controllers:login(newAuth);
+        if(result=="OK"){
+            check caller->respond("OK");
+        }else if(result=="Incorrect"){
+            check caller->respond("Invalid");
+        }else {
+            check caller->respond("Not Exist");
+        }
     }
 }
+
