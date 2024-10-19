@@ -12,17 +12,10 @@ Make sure you have the following installed on your machine:
 
 1. **Navigate to the backend directory**:
    ```bash
-   cd backend
+   cd iwb310-backlog-bashers
    ```
 
-2. **Set up MySQL Database**:
-   - Create a database in MySQL.
-   - Import any required SQL dump files to set up the schema.
-
-3. **Configure Database Connection**:
-   - Update the `ballerina.conf` file with your MySQL connection details (username, password, database name).
-
-4. **Run the Ballerina backend**:
+2. **Run the Ballerina backend**:
    ```bash
    bal.bat run \iwb310-backlog-bashers
    ```
@@ -46,7 +39,7 @@ Make sure you have the following installed on your machine:
    npm run dev
    ```
 
-   The frontend should now be running on `http://localhost:3000`.
+   The frontend should now be running on `http://localhost:5173`.
 
 ## Available Scripts (Frontend)
 
@@ -60,6 +53,15 @@ In the `frontend` directory, you can run the following commands:
 In the `backend` directory, you can run:
 
 - `ballerina run src`: Runs the Ballerina service.
+
+## Login Credentials
+
+After setting up the frontend and backend, you can log in using the following credentials:
+
+-   **Username**: `newemail@example.com`
+-   **Password**: `johndoe123`
+
+Use these credentials to access the system.
 
 ## Technologies Used
 
