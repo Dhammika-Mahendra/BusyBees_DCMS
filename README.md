@@ -78,8 +78,8 @@ Use these credentials to access the system.
 ## Repository Structure
 
 - **BusyBees_DCMS**: Main repository with backend and frontend.
-- **BusyBees_DCMS-Front_End-**: The original React frontend repository (merged into this one).
-- **BusyBees_DCMS-Backend**: The original Ballerina backend repository (merged into this one).
+- **BusyBees_DCMS-Front_End-**: The original React frontend repository ([merged into this one](https://github.com/hewageuhcu/BusyBees_DCMS-Front_End-.git).
+- **BusyBees_DCMS-Backend**: The original Ballerina backend repository ([merged into this one](https://github.com/Dhammika-Mahendra/BusyBees_DCMS.git).
 
 ## Contributing
 
